@@ -36,7 +36,6 @@ namespace VDMKC {
 					this.app.poller = new Poller(this.app, this.server_entry.get_text(), this.channel_entry.get_text(), this.password_entry.get_text());
 					this.app.poller.start_poll();
 					this.app.canvas = new Canvas(this.app);
-					this.app.add_window(this.app.canvas);
 					this.app.canvas.show_all();
 				} else {
 					this.app.canvas.close();
