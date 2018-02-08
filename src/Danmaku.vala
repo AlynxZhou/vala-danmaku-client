@@ -89,7 +89,8 @@ namespace VDMKC {
 		}
 		public void draw(Cairo.Context context, int64 frame_time, int canvas_width, int canvas_height) {
 			this.set_context_rgba(context, this.color);
-			context.select_font_face("Noto Sans CJK SC", Cairo.FontSlant.NORMAL, Cairo.FontWeight.NORMAL);
+			context.set_line_width(1);
+			context.select_font_face("Noto Sans CJK SC", Cairo.FontSlant.NORMAL, Cairo.FontWeight.BOLD);
 			var font_size = canvas_height / this.app.slot_length;
 			context.set_font_size(font_size);
 			Cairo.TextExtents text_extents;
@@ -98,7 +99,14 @@ namespace VDMKC {
 			if (this.position == Position.FLY) {
 				var x = canvas_width - (double)(frame_time - this.start_display_time) / this.animate_time * (canvas_width + text_extents.width);
 				context.move_to(x, y);
-				context.show_text(this.content);
+				context.text_path(this.content);
+				context.fill();
+				if (this.color == Color.WHITE || this.color == Color.GREEN || this.color == Color.YELLOW || this.color == Color.CYAN) {
+					this.set_context_rgba(context, Color.BLACK);
+					context.move_to(x, y);
+					context.text_path(this.content);
+					context.stroke();
+				}
 				if (x + text_extents.width < canvas_width)
 					this.left();
 				if (frame_time - this.start_display_time > this.animate_time)
@@ -106,7 +114,14 @@ namespace VDMKC {
 			} else {
 				var x = canvas_width / 2 - text_extents.width / 2;
 				context.move_to(x, y);
-				context.show_text(this.content);
+				context.text_path(this.content);
+				context.fill();
+				if (this.color == Color.WHITE || this.color == Color.GREEN || this.color == Color.YELLOW || this.color == Color.CYAN) {
+					this.set_context_rgba(context, Color.BLACK);
+					context.move_to(x, y);
+					context.text_path(this.content);
+					context.stroke();
+				}
 				if (frame_time - this.start_display_time > this.animate_time)
 					this.close();
 			}

@@ -10,14 +10,14 @@ namespace VDMKC {
 			this.app = app;
 			if (!(base_uri.strip().has_prefix("http://") || base_uri.strip().has_prefix("https://")))
 				if (!(base_uri.strip().has_suffix("/")))
-					this.uri = "http://" + base_uri.strip() + "/api/channel/" + channel + "/danmaku";
+					this.uri = "http://" + base_uri.strip() + "/api/channel/" + channel.strip() + "/danmaku";
 				else
-					this.uri = "http://" + base_uri.strip() + "api/channel/" + channel + "/danmaku";
+					this.uri = "http://" + base_uri.strip() + "api/channel/" + channel.strip() + "/danmaku";
 			else
 				if (!(base_uri.strip().has_suffix("/")))
-					this.uri = base_uri.strip() + "/api/channel/" + channel + "/danmaku";
+					this.uri = base_uri.strip() + "/api/channel/" + channel.strip() + "/danmaku";
 				else
-					this.uri = base_uri.strip() + "api/channel/" + channel + "/danmaku";
+					this.uri = base_uri.strip() + "api/channel/" + channel.strip() + "/danmaku";
 			this.password = password;
 			this.poll_offset = get_real_time() / 1000;
 			this.session = new Soup.Session();
@@ -38,6 +38,12 @@ namespace VDMKC {
 						stderr.printf("%s\n", e.message);
 					}
 					flatten_buffer.free();
+					if (message.status_code != 200) {
+						this.app.poll_switch.set_active(false);
+						var error = parser.get_root().get_object();
+						this.app.status.set_label("%s %s: %s".printf(error.get_string_member("statusCode"), error.get_string_member("error"), error.get_string_member("message")));
+						break;
+					}
 					var danmakus = parser.get_root().get_array();
 					var danmakus_length = danmakus.get_length();
 					for (var i = 0; i < danmakus_length; ++i) {

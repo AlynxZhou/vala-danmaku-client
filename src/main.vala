@@ -17,6 +17,12 @@
  */
 
 int main (string[] args) {
-	Environment.set_variable("GDK_BACKEND", "x11", false);
+	if (!Thread.supported()) {
+	        stderr.printf("Cannot run without thread support.\n");
+	        return 1;
+	}
+	// Window hint won't work in GNOME/Wayland 3.26, use XWayland instead.
+	if (Environment.get_variable("XDG_SESSION_TYPE") == "wayland")
+		Environment.set_variable("GDK_BACKEND", "x11", false);
 	return new VDMKC.App().run(args);
 }

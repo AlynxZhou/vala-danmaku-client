@@ -1,13 +1,32 @@
 # vala-danmaku-client
+
 A danmaku client on desktop, written in Vala and using GTK+, Cairo.
+
+Dependency:
+
+- glib-2.0
+- gio-2.0
+- gtk+-3.0
+- gee-0.8
+- libsoup-2.4
+- json-glib-1.0
 
 Compile it with:
 
 ```
-$ valac --thread --pkg gio-2.0 --pkg glib-2.0 --pkg gtk+-3.0 --pkg gee-0.8 --pkg libsoup-2.4 --pkg json-glib-1.0 src/main.vala src/Window.vala src/App.vala src/Canvas.vala
-src/Poller.vala src/Danmaku.vala -o bin/vala-danmaku-client
+$ make
 ```
 
-Currently tested in GNOME 3.26.
+Run it with:
+
+```
+$ ./bin/vala-danmaku-client
+```
+
+Visit [http://danmaku.ismyonly.one:2333/](http://danmaku.ismyonly.one:2333/) to find channel and shoot danmakus!
+
+If you want to create your own server see [coffee-danmaku-server](https://github.com/AlynxZhou/coffee-danmaku-server).
+
+Currently tested in GNOME 3.26 and Windows.
 
 Needs Noto Sans CJK SC font to work!
