@@ -19,6 +19,8 @@ namespace VDMKC {
 			// Set window size
 			var geometry = this.get_screen().get_display().get_monitor(0).get_geometry();
 			this.set_default_size(geometry.width, geometry.height);
+			// Do NOT use Gtk.Widget.set_opacity(0) because it will make the whole window including DrawingArea transparent.
+			// ((Gtk.Widget)this).set_opacity(0);
 			this.set_transparent_visual();
 			((Gtk.Widget)this).set_app_paintable(true);
 			((Gtk.Widget)this).draw.connect((context) => {
