@@ -19,7 +19,7 @@ namespace VDMKC {
 				else
 					this.uri = base_uri.strip() + "api/channel/" + channel.strip() + "/danmaku";
 			this.password = password;
-			this.poll_offset = get_real_time() / 1000;
+			this.poll_offset = 0;
 			this.session = new Soup.Session();
 			this.poll = false;
 		}
@@ -27,7 +27,11 @@ namespace VDMKC {
 			this.poll = true;
 			new Thread<int>("polling", () => {
 				while (this.poll) {
-					var message = new Soup.Message("GET", this.uri + "?time=" + this.poll_offset.to_string());
+					var message;
+					if (this.poll_offset != 0)
+						message = new Soup.Message("GET", this.uri + "?time=" + this.poll_offset.to_string());
+					else
+						message = new Soup.Message("GET", this.uri);
 					message.request_headers.append("X-Danmaku-Auth-Key", this.password);
 					this.session.send_message(message);
 					var flatten_buffer = message.response_body.flatten();
