@@ -27,7 +27,7 @@ namespace VDMKC {
 			this.poll = true;
 			new Thread<int>("polling", () => {
 				while (this.poll) {
-					Soup.message message;
+					Soup.Message message;
 					if (this.poll_offset != 0)
 						message = new Soup.Message("GET", this.uri + "?time=" + this.poll_offset.to_string());
 					else
