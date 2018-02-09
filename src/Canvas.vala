@@ -44,8 +44,7 @@ namespace VDMKC {
 			this.danmaku_area = new Gtk.DrawingArea();
 			// Animate.
 			Timeout.add(1000 / this.app.fps, () => {
-				if (this.app.danmakus.size > 0)
-					this.danmaku_area.queue_draw();
+				this.danmaku_area.queue_draw();
 				return true;
 			});
 			this.danmaku_area.draw.connect((context) => {

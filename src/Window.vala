@@ -30,7 +30,7 @@ namespace VDMKC {
 					this.app.animate_time = (int64)(double.parse(this.animate_time_entry.get_text()) * 1000);
 					if (this.app.animate_time < 1000) {
 						this.app.animate_time = 10 * 1000;
-						this.animate_time_entry.set_text("10");
+						this.animate_time_entry.set_text((this.app.animate_time / 1000).to_string());
 						this.app.status.set_label("显示时间太短，设为默认值 10 秒！");
 					}
 					this.app.slot_length = int.parse(this.slot_length_entry.get_text());
@@ -46,6 +46,7 @@ namespace VDMKC {
 					for (var i = 0; i < this.app.canvases.size; ++i)
 						this.app.canvases.@get(i).close();
 					this.app.canvases.clear();
+					this.app.danmakus.clear();
 					this.app.poller.stop_poll();
 					this.app.poller = null;
 					this.server_entry.set_editable(true);
@@ -97,7 +98,7 @@ namespace VDMKC {
 			child_boxes[4] = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 10);
 			child_boxes[4].pack_start(new Gtk.Label("弹幕显示时间（秒）："), false, false, 0);
 			this.animate_time_entry = new Gtk.Entry();
-			this.animate_time_entry.set_text("10");
+			this.animate_time_entry.set_text((this.app.animate_time / 1000).to_string());
 			this.animate_time_entry.activate.connect(() => {
 				if (this.app.poll_switch.get_active())
 					this.app.poll_switch.set_active(false);
@@ -109,7 +110,7 @@ namespace VDMKC {
 			child_boxes[5] = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 10);
 			child_boxes[5].pack_start(new Gtk.Label("弹幕槽数："), false, false, 0);
 			this.slot_length_entry = new Gtk.Entry();
-			this.slot_length_entry.set_text("30");
+			this.slot_length_entry.set_text(this.app.slot_length.to_string());
 			this.slot_length_entry.activate.connect(() => {
 				if (this.app.poll_switch.get_active())
 					this.app.poll_switch.set_active(false);
@@ -119,7 +120,8 @@ namespace VDMKC {
 			child_boxes[5].pack_end(this.slot_length_entry, true, true, 0);
 			box.pack_start(child_boxes[5], true, false, 0);
 			this.app.status = new Gtk.Label("Code by AlynxZhou, GPLv3 License.");
-			box.pack_end(this.app.status, false, true, 0);
+			this.app.status.set_ellipsize(Pango.EllipsizeMode.END);
+			box.pack_end(this.app.status, false, false, 0);
 			this.add(box);
 		}
 	}

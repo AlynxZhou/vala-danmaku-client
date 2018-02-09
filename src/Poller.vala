@@ -61,10 +61,7 @@ namespace VDMKC {
 						var position = danmaku.get_string_member("position");
 						var color = danmaku.get_string_member("color");
 						var time = danmaku.get_int_member("time");
-						if (content.length > 18)
-							this.app.status.set_label("Danmaku: content: %s..., position: %s, color: %s".printf(content.substring(0, 18), position, color));
-						else
-							this.app.status.set_label("Danmaku: content: %s, position: %s, color: %s".printf(content, position, color));
+						this.app.status.set_label("Danmaku: %s, %s, %s".printf(position, color, content));
 						this.app.alloc_danmaku(new Danmaku(this.app, content, color, position, time));
 						if (time >= this.poll_offset)
 							this.poll_offset = time + 1;
