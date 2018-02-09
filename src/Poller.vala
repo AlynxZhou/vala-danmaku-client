@@ -35,13 +35,13 @@ namespace VDMKC {
 					try {
 						parser.load_from_data((string)flatten_buffer.data);
 					} catch (Error e) {
-						stderr.printf("%s\n", e.message);
+						this.app.status.set_label("Error: %s".printf(e.message));
 					}
 					flatten_buffer.free();
 					if (message.status_code != 200) {
 						this.app.poll_switch.set_active(false);
 						var error = parser.get_root().get_object();
-						this.app.status.set_label("%s %s: %s".printf(error.get_string_member("statusCode"), error.get_string_member("error"), error.get_string_member("message")));
+						this.app.status.set_label("Error: %s %s: %s".printf(error.get_string_member("statusCode"), error.get_string_member("error"), error.get_string_member("message")));
 						break;
 					}
 					var danmakus = parser.get_root().get_array();
@@ -52,7 +52,7 @@ namespace VDMKC {
 						var position = danmaku.get_string_member("position");
 						var color = danmaku.get_string_member("color");
 						var time = danmaku.get_int_member("time");
-						stdout.printf("New Danmaku: content: %s, position: %s, color: %s, time: %s\n", content, position, color, time.to_string());
+						this.app.status.set_label("Danmaku: content: %s, position: %s, color: %s".printf(content, position, color));
 						this.app.alloc_danmaku(new Danmaku(this.app, content, color, position, time));
 						if (time >= this.poll_offset)
 							this.poll_offset = time + 1;

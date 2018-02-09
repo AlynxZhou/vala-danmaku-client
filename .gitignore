@@ -50,4 +50,8 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
-bin/*
+
+# MingW Dlls
+bin/*.dll
+bin/vala-danmaku-client.exe
+bin/vala-danmaku-client
