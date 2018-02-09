@@ -44,7 +44,12 @@ namespace VDMKC {
 						this.app.status.set_label("Error: %s %s: %s".printf(error.get_string_member("statusCode"), error.get_string_member("error"), error.get_string_member("message")));
 						break;
 					}
-					var danmakus = parser.get_root().get_array();
+					var root_node = parser.get_root();
+					if (root_node == null) {
+						this.app.status.set_label("Warning: Invalid Node, continue.");
+						continue;
+					}
+					var danmakus = root_node.get_array();
 					var danmakus_length = danmakus.get_length();
 					for (var i = 0; i < danmakus_length; ++i) {
 						var danmaku = danmakus.get_object_element(i);
