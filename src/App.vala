@@ -5,7 +5,7 @@ namespace VDMKC {
 		public Gtk.Switch poll_switch;
 		public Gtk.Label status;
 		public Poller poller;
-		public Canvas canvas;
+		public Gee.ArrayList<Canvas> canvases;
 		public int64 animate_time;
 		public int slot_length;
 		public int fps;
@@ -15,6 +15,7 @@ namespace VDMKC {
 			this.slot_length = 30;
 			this.fps = 30;
 			this.danmakus = new Gee.LinkedList<Danmaku>();
+			this.canvases = new Gee.ArrayList<Canvas>();
 		}
 		protected override void activate() {
 			window = new Window(this);

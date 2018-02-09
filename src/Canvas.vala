@@ -5,7 +5,7 @@ namespace VDMKC {
 		private bool[] fly_slots;
 		private bool[] fix_slots;
 		private Rand rand;
-		public Canvas(App app) {
+		public Canvas(App app, int mon) {
 			this.app = app;
 			this.set_title("VDMKC.Canvas");
 			this.set_icon_name("preferences-desktop-screensaver");
@@ -16,8 +16,17 @@ namespace VDMKC {
 			this.set_skip_pager_hint(true);
 			this.set_skip_taskbar_hint(true);
 			this.set_accept_focus(false);
+			this.set_position(Gtk.WindowPosition.CENTER);
+			this.set_gravity(Gdk.Gravity.NORTH_WEST);
 			// Set window size
-			var geometry = this.get_screen().get_display().get_monitor(0).get_geometry();
+			// this.move_to_monitor(mon);
+			int x;
+			int y;
+			this.get_position(out x, out y);
+			x += this.get_screen().get_display().get_monitor(mon).get_geometry().x;
+			y += this.get_screen().get_display().get_monitor(mon).get_geometry().y;
+			this.move(x, y);
+			var geometry = this.get_screen().get_display().get_monitor(mon).get_geometry();
 			this.set_default_size(geometry.width, geometry.height);
 			// Do NOT use Gtk.Widget.set_opacity(0) because it will make the whole window including DrawingArea transparent.
 			// ((Gtk.Widget)this).set_opacity(0);
@@ -44,10 +53,15 @@ namespace VDMKC {
 			this.danmaku_area = new Gtk.DrawingArea();
 			// Animate.
 			Timeout.add(1000 / this.app.fps, () => {
-				this.danmaku_area.queue_draw();
+				if (this.app.danmakus.size > 0)
+					this.danmaku_area.queue_draw();
 				return true;
 			});
 			this.danmaku_area.draw.connect((context) => {
+				context.set_source_rgba(1, 1, 1, 0.5);
+				context.set_font_size(200);
+				context.move_to(100, 100);
+				context.show_text(mon.to_string());
 				int width = this.danmaku_area.get_allocated_width();
 				int height = this.danmaku_area.get_allocated_height();
 				int64 time = get_real_time() / 1000;
@@ -135,6 +149,14 @@ namespace VDMKC {
 				((Gtk.Widget)this).input_shape_combine_region(null);
 				((Gtk.Widget)this).input_shape_combine_region(region);
 			}
+		}
+		public void move_to_monitor(int mon) {
+			int x;
+			int y;
+			this.get_position(out x, out y);
+			x += this.get_screen().get_display().get_monitor(mon).get_geometry().x;
+			y += this.get_screen().get_display().get_monitor(mon).get_geometry().y;
+			this.move(x, y);
 		}
 	}
 }

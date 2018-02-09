@@ -36,13 +36,17 @@ namespace VDMKC {
 					this.app.status.set_label("Code by AlynxZhou, GPLv3 License.");
 					this.app.poller = new Poller(this.app, this.server_entry.get_text(), this.channel_entry.get_text(), this.password_entry.get_text());
 					this.app.poller.start_poll();
-					this.app.canvas = new Canvas(this.app);
-					this.app.canvas.show_all();
+					for (var i = 0; i < this.get_screen().get_display().get_n_monitors(); ++i) {
+						var canvas = new Canvas(this.app, i);
+						this.app.canvases.add(canvas);
+						canvas.show_all();
+					}
 				} else {
-					this.app.canvas.close();
+					for (var i = 0; i < this.app.canvases.size; ++i)
+						this.app.canvases.@get(i).close();
+					this.app.canvases.clear();
 					this.app.poller.stop_poll();
 					this.app.poller = null;
-					this.app.canvas = null;
 					this.server_entry.set_editable(true);
 					this.channel_entry.set_editable(true);
 					this.password_entry.set_editable(true);
@@ -116,7 +120,6 @@ namespace VDMKC {
 			this.app.status = new Gtk.Label("Code by AlynxZhou, GPLv3 License.");
 			box.pack_end(this.app.status, false, true, 0);
 			this.add(box);
-			this.show_all();
 		}
 	}
 }
