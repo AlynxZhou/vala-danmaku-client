@@ -17,6 +17,14 @@ Compile it with:
 $ make
 ```
 
+If you are using Windows, install [MSYS 2](http://www.msys2.org/) (I use 32-bit version in Makefile), and use `pacman -S make git` to install `make` and `git`, then use `pacman -S mingw-w64-i686-gcc mingw-w64-i686-pkg-config mingw-w64-i686-vala mingw-w64-i686-gtk3 mingw-w64-i686-libgee mingw-w64-i686-libsoup` to install dependency and then `make win32`. Then you can copy all files under `bin`, and run it needs `msvcrt.dll`.
+
+```
+$ pacman -S make git
+$ pacman -S mingw-w64-i686-gcc mingw-w64-i686-pkg-config mingw-w64-i686-vala mingw-w64-i686-gtk3 mingw-w64-i686-libgee mingw-w64-i686-libsoup
+$ make win32
+```
+
 Run it with:
 
 ```
