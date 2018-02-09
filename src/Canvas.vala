@@ -30,7 +30,6 @@ namespace VDMKC {
 				context.set_operator(Cairo.Operator.OVER);
 				return false;
 			});
-			// fullscreen();
 			this.set_input_through();
 			this.set_keep_above(true);
 			// Set always on visible workspace.
@@ -45,6 +44,7 @@ namespace VDMKC {
 			// Animate.
 			Timeout.add(1000 / this.app.fps, () => {
 				this.danmaku_area.queue_draw();
+				this.set_keep_above(true);
 				return true;
 			});
 			this.danmaku_area.draw.connect((context) => {
@@ -136,7 +136,6 @@ namespace VDMKC {
 			if (visual == null)
 				visual = screen.get_system_visual();
 			this.set_visual(visual);
-			this.set_keep_above(true);
 		}
 		public void set_input_through() {
 			Cairo.RectangleInt rect = { 0, 0, 1, 1 };
