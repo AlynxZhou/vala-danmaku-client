@@ -90,7 +90,7 @@ namespace VDMKC {
 		public void draw(Cairo.Context context, int64 frame_time, int canvas_width, int canvas_height) {
 			this.set_context_rgba(context, this.color);
 			context.set_line_width(1);
-			context.select_font_face("Noto Sans CJK SC", Cairo.FontSlant.NORMAL, Cairo.FontWeight.BOLD);
+			context.select_font_face("Noto Sans CJK SC Regular", Cairo.FontSlant.NORMAL, Cairo.FontWeight.BOLD);
 			var font_size = canvas_height / this.app.slot_length;
 			context.set_font_size(font_size);
 			Cairo.TextExtents text_extents;
