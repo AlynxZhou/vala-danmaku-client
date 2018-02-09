@@ -33,6 +33,7 @@ namespace VDMKC {
 						this.app.status.set_label("显示时间太短，设为默认值 10 秒！");
 					}
 					this.app.slot_length = int.parse(this.slot_length_entry.get_text());
+					this.app.status = new Gtk.Label("Code by AlynxZhou, GPLv3 License.");
 					this.app.poller = new Poller(this.app, this.server_entry.get_text(), this.channel_entry.get_text(), this.password_entry.get_text());
 					this.app.poller.start_poll();
 					this.app.canvas = new Canvas(this.app);
