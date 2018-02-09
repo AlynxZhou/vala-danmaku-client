@@ -86,7 +86,7 @@ namespace VDMKC {
 					}
 					break;
 				case Position.BOTTOM:
-					for (var i = this.app.slot_length; i >= 0; --i) {
+					for (var i = this.app.slot_length - 1; i >= 0; --i) {
 						if (!this.fix_slots[i]) {
 							this.fix_slots[i] = true;
 							danmaku.start_display(i, this.app.animate_time);
