@@ -16,9 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-int main (string[] args) {
+[CCode(cname="GETTEXT_PACKAGE")]
+extern const string GETTEXT_PACKAGE;
+
+int main(string[] args) {
+	Intl.setlocale(LocaleCategory.MESSAGES, "");
+	Intl.bind_textdomain_codeset(GETTEXT_PACKAGE, "utf-8");
+	Intl.bindtextdomain(GETTEXT_PACKAGE, "locale");
 	if (!Thread.supported()) {
-	        stderr.printf("Cannot run without thread support.\n");
+	        stderr.printf(_("Cannot run without thread support.\n"));
 	        return 1;
 	}
 	// Window hint won't work in GNOME/Wayland 3.26, use XWayland instead.

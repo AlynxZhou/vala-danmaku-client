@@ -4,8 +4,8 @@ namespace VDMKC {
 		private Gtk.Entry server_entry;
 		private Gtk.Entry channel_entry;
 		private Gtk.Entry password_entry;
-		private Gtk.Entry animate_time_entry;
-		private Gtk.Entry slot_length_entry;
+		private Gtk.Entry display_time_entry;
+		private Gtk.Entry slot_number_entry;
 		public Window(App app) {
 			// Super.
 			Object(application: app);
@@ -16,7 +16,7 @@ namespace VDMKC {
 			var box = new Gtk.Box(Gtk.Orientation.VERTICAL, 10);
 			var child_boxes = new Gtk.Box[6];
 			child_boxes[0] = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 10);
-			child_boxes[0].pack_start(new Gtk.Label("开关："), false, false, 0);
+			child_boxes[0].pack_start(new Gtk.Label(_("Switch: ")), false, false, 0);
 			this.app.poll_switch = new Gtk.Switch();
 			this.app.poll_switch.set_active(false);
 			this.app.poll_switch.notify["active"].connect(() => {
@@ -24,16 +24,16 @@ namespace VDMKC {
 					this.server_entry.set_editable(false);
 					this.channel_entry.set_editable(false);
 					this.password_entry.set_editable(false);
-					this.animate_time_entry.set_editable(false);
-					this.slot_length_entry.set_editable(false);
-					this.app.status.set_label("Code by AlynxZhou, GPLv3 License.");
-					this.app.animate_time = (int64)(double.parse(this.animate_time_entry.get_text()) * 1000);
-					if (this.app.animate_time < 1000) {
-						this.app.animate_time = 10 * 1000;
-						this.animate_time_entry.set_text((this.app.animate_time / 1000).to_string());
-						this.app.status.set_label("显示时间太短，设为默认值 10 秒！");
+					this.display_time_entry.set_editable(false);
+					this.slot_number_entry.set_editable(false);
+					this.app.status.set_label(_("Code by AlynxZhou, GPLv3 License."));
+					this.app.display_time = (int64)(double.parse(this.display_time_entry.get_text()) * 1000);
+					if (this.app.display_time < 1000) {
+						this.app.display_time = 10 * 1000;
+						this.display_time_entry.set_text((this.app.display_time / 1000).to_string());
+						this.app.status.set_label(_("Display time too short and set it to default 10s!"));
 					}
-					this.app.slot_length = int.parse(this.slot_length_entry.get_text());
+					this.app.slot_number = int.parse(this.slot_number_entry.get_text());
 					this.app.poller = new Poller(this.app, this.server_entry.get_text(), this.channel_entry.get_text(), this.password_entry.get_text());
 					this.app.poller.start_poll();
 					var monitor_count = this.get_screen().get_display().get_n_monitors();
@@ -52,14 +52,14 @@ namespace VDMKC {
 					this.server_entry.set_editable(true);
 					this.channel_entry.set_editable(true);
 					this.password_entry.set_editable(true);
-					this.animate_time_entry.set_editable(true);
-					this.slot_length_entry.set_editable(true);
+					this.display_time_entry.set_editable(true);
+					this.slot_number_entry.set_editable(true);
 				}
 			});
 			child_boxes[0].pack_end(this.app.poll_switch, true, false, 0);
 			box.pack_start(child_boxes[0], true, false, 0);
 			child_boxes[1] = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 10);
-			child_boxes[1].pack_start(new Gtk.Label("服务器地址："), false, false, 0);
+			child_boxes[1].pack_start(new Gtk.Label(_("Server Link: ")), false, false, 0);
 			this.server_entry = new Gtk.Entry();
 			this.server_entry.set_text("http://danmaku.ismyonly.one:2333/");
 			this.server_entry.activate.connect(() => {
@@ -71,7 +71,7 @@ namespace VDMKC {
 			child_boxes[1].pack_end(this.server_entry, true, true, 0);
 			box.pack_start(child_boxes[1], true, false, 0);
 			child_boxes[2] = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 10);
-			child_boxes[2].pack_start(new Gtk.Label("频道名称："), false, false, 0);
+			child_boxes[2].pack_start(new Gtk.Label(_("Channel Name: ")), false, false, 0);
 			this.channel_entry = new Gtk.Entry();
 			this.channel_entry.set_text("demo");
 			this.channel_entry.activate.connect(() => {
@@ -83,7 +83,7 @@ namespace VDMKC {
 			child_boxes[2].pack_end(this.channel_entry, true, true, 0);
 			box.pack_start(child_boxes[2], true, false, 0);
 			child_boxes[3] = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 10);
-			child_boxes[3].pack_start(new Gtk.Label("频道密码（如果有）："), false, false, 0);
+			child_boxes[3].pack_start(new Gtk.Label(_("Channel Password (If have): ")), false, false, 0);
 			this.password_entry = new Gtk.Entry();
 			this.password_entry.set_visibility(false);
 			this.password_entry.caps_lock_warning = true;
@@ -96,30 +96,30 @@ namespace VDMKC {
 			child_boxes[3].pack_end(this.password_entry, true, true, 0);
 			box.pack_start(child_boxes[3], true, false, 0);
 			child_boxes[4] = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 10);
-			child_boxes[4].pack_start(new Gtk.Label("弹幕显示时间（秒）："), false, false, 0);
-			this.animate_time_entry = new Gtk.Entry();
-			this.animate_time_entry.set_text((this.app.animate_time / 1000).to_string());
-			this.animate_time_entry.activate.connect(() => {
+			child_boxes[4].pack_start(new Gtk.Label(_("Danmaku Display Time (Second): ")), false, false, 0);
+			this.display_time_entry = new Gtk.Entry();
+			this.display_time_entry.set_text((this.app.display_time / 1000).to_string());
+			this.display_time_entry.activate.connect(() => {
 				if (this.app.poll_switch.get_active())
 					this.app.poll_switch.set_active(false);
 				else
 					this.app.poll_switch.set_active(true);
 			});
-			child_boxes[4].pack_end(this.animate_time_entry, true, true, 0);
+			child_boxes[4].pack_end(this.display_time_entry, true, true, 0);
 			box.pack_start(child_boxes[4], true, false, 0);
 			child_boxes[5] = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 10);
-			child_boxes[5].pack_start(new Gtk.Label("弹幕槽数："), false, false, 0);
-			this.slot_length_entry = new Gtk.Entry();
-			this.slot_length_entry.set_text(this.app.slot_length.to_string());
-			this.slot_length_entry.activate.connect(() => {
+			child_boxes[5].pack_start(new Gtk.Label(_("Danmaku Slot Number: ")), false, false, 0);
+			this.slot_number_entry = new Gtk.Entry();
+			this.slot_number_entry.set_text(this.app.slot_number.to_string());
+			this.slot_number_entry.activate.connect(() => {
 				if (this.app.poll_switch.get_active())
 					this.app.poll_switch.set_active(false);
 				else
 					this.app.poll_switch.set_active(true);
 			});
-			child_boxes[5].pack_end(this.slot_length_entry, true, true, 0);
+			child_boxes[5].pack_end(this.slot_number_entry, true, true, 0);
 			box.pack_start(child_boxes[5], true, false, 0);
-			this.app.status = new Gtk.Label("Code by AlynxZhou, GPLv3 License.");
+			this.app.status = new Gtk.Label(_("Code by AlynxZhou, GPLv3 License."));
 			this.app.status.set_ellipsize(Pango.EllipsizeMode.END);
 			box.pack_end(this.app.status, false, false, 0);
 			this.add(box);

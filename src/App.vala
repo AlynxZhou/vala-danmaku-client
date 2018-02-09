@@ -6,13 +6,13 @@ namespace VDMKC {
 		public Gtk.Label status;
 		public Poller poller;
 		public Gee.ArrayList<Canvas> canvases;
-		public int64 animate_time;
-		public int slot_length;
+		public int64 display_time;
+		public int slot_number;
 		public int fps;
 		public signal void alloc_danmaku(Danmaku danmaku);
 		public App() {
-			this.animate_time = 10 * 1000;
-			this.slot_length = 18;
+			this.display_time = 10 * 1000;
+			this.slot_number = 18;
 			this.fps = 30;
 			this.danmakus = new Gee.LinkedList<Danmaku>();
 			this.canvases = new Gee.ArrayList<Canvas>();

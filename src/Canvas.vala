@@ -34,9 +34,9 @@ namespace VDMKC {
 			this.set_keep_above(true);
 			// Set always on visible workspace.
 			this.stick();
-			this.fly_slots = new bool[this.app.slot_length];
-			this.fix_slots = new bool[this.app.slot_length];
-			for (var i = 0; i < this.app.slot_length; ++i) {
+			this.fly_slots = new bool[this.app.slot_number];
+			this.fix_slots = new bool[this.app.slot_number];
+			for (var i = 0; i < this.app.slot_number; ++i) {
 				this.fly_slots[i] = false;
 				this.fix_slots[i] = false;
 			}
@@ -81,50 +81,50 @@ namespace VDMKC {
 				var full = true;
 				switch (danmaku.position) {
 				case Position.TOP:
-					for (var i = 0; i < this.app.slot_length; ++i) {
+					for (var i = 0; i < this.app.slot_number; ++i) {
 						if (!this.fix_slots[i]) {
 							this.fix_slots[i] = true;
-							danmaku.start_display(i, this.app.animate_time);
+							danmaku.start_display(i, this.app.display_time);
 							full = false;
 							break;
 						}
 					}
 					if (full) {
-						int slot = this.rand.int_range(0, this.app.slot_length);
+						int slot = this.rand.int_range(0, this.app.slot_number);
 						this.fix_slots[slot] = true;
-						danmaku.start_display(slot, this.app.animate_time);
+						danmaku.start_display(slot, this.app.display_time);
 					}
 					break;
 				case Position.BOTTOM:
-					for (var i = this.app.slot_length - 1; i >= 0; --i) {
+					for (var i = this.app.slot_number - 1; i >= 0; --i) {
 						if (!this.fix_slots[i]) {
 							this.fix_slots[i] = true;
-							danmaku.start_display(i, this.app.animate_time);
+							danmaku.start_display(i, this.app.display_time);
 							full = false;
 							break;
 						}
 					}
 					if (full) {
-						int slot = this.rand.int_range(0, this.app.slot_length);
+						int slot = this.rand.int_range(0, this.app.slot_number);
 						this.fix_slots[slot] = true;
-						danmaku.start_display(slot, this.app.animate_time);
+						danmaku.start_display(slot, this.app.display_time);
 					}
 					break;
 				case Position.FLY:
-					for (var i = 3; i < this.app.slot_length + 3; ++i) {
-						if (i >= this.app.slot_length)
-							i %= this.app.slot_length;
+					for (var i = 3; i < this.app.slot_number + 3; ++i) {
+						if (i >= this.app.slot_number)
+							i %= this.app.slot_number;
 						if (!this.fly_slots[i]) {
 							this.fly_slots[i] = true;
-							danmaku.start_display(i, this.app.animate_time);
+							danmaku.start_display(i, this.app.display_time);
 							full = false;
 							break;
 						}
 					}
 					if (full) {
-						int slot = this.rand.int_range(0, this.app.slot_length);
+						int slot = this.rand.int_range(0, this.app.slot_number);
 						this.fly_slots[slot] = true;
-						danmaku.start_display(slot, this.app.animate_time);
+						danmaku.start_display(slot, this.app.display_time);
 					}
 					break;
 				}

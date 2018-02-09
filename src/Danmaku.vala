@@ -8,7 +8,7 @@ namespace VDMKC {
 		public Position position;
 		public int64 time;
 		public int slot;
-		private int64 animate_time;
+		private int64 display_time;
 		private int64 start_display_time;
 		public signal void close();
 		public signal void left();
@@ -82,22 +82,22 @@ namespace VDMKC {
 				break;
 			}
 		}
-		public void start_display(int slot, int64 animate_time) {
+		public void start_display(int slot, int64 display_time) {
 			this.slot = slot;
-			this.animate_time = animate_time;
+			this.display_time = display_time;
 			this.start_display_time = get_real_time() / 1000;
 		}
 		public void draw(Cairo.Context context, int64 frame_time, int canvas_width, int canvas_height) {
 			this.set_context_rgba(context, this.color);
 			context.set_line_width(1);
 			context.select_font_face("Noto Sans CJK SC Regular", Cairo.FontSlant.NORMAL, Cairo.FontWeight.BOLD);
-			var font_size = canvas_height / this.app.slot_length;
+			var font_size = canvas_height / this.app.slot_number;
 			context.set_font_size(font_size);
 			Cairo.TextExtents text_extents;
 			context.text_extents(this.content, out text_extents);
 			var y = font_size * this.slot - text_extents.y_bearing;
 			if (this.position == Position.FLY) {
-				var x = canvas_width - (double)(frame_time - this.start_display_time) / this.animate_time * (canvas_width + text_extents.width);
+				var x = canvas_width - (double)(frame_time - this.start_display_time) / this.display_time * (canvas_width + text_extents.width);
 				context.move_to(x, y);
 				context.text_path(this.content);
 				context.fill();
@@ -109,7 +109,7 @@ namespace VDMKC {
 				}
 				if (x + text_extents.width < canvas_width)
 					this.left();
-				if (frame_time - this.start_display_time > this.animate_time)
+				if (frame_time - this.start_display_time > this.display_time)
 					this.close();
 			} else {
 				var x = canvas_width / 2 - text_extents.width / 2;
@@ -122,7 +122,7 @@ namespace VDMKC {
 					context.text_path(this.content);
 					context.stroke();
 				}
-				if (frame_time - this.start_display_time > this.animate_time)
+				if (frame_time - this.start_display_time > this.display_time)
 					this.close();
 			}
 		}

@@ -4,23 +4,23 @@ WIN32DLLS := {libatk-1.0-0.dll,libbz2-1.dll,libcairo-2.dll,libcairo-gobject-2.dl
 
 vala-danmaku-client: ${SOURCES}
 	-mkdir bin
-	valac -X -O2 -o bin/vala-danmaku-client --thread ${PKGS} ${SOURCES}
+	valac -X -O2 -X -DGETTEXT_PACKAGE=\"vala-danmaku-client\" -o bin/vala-danmaku-client --thread ${PKGS} ${SOURCES}
 
 # Use -X -mwindows to pass this to mingw and disable the console in Windows.
 win32: ${SOURCES}
 	-mkdir bin
-	valac -X -O2 -X -mwindows -o bin/vala-danmaku-client --thread ${PKGS} ${SOURCES}
+	valac -X -O2 -X -mwindows -X -DGETTEXT_PACKAGE=\"vala-danmaku-client\" -o bin/vala-danmaku-client --thread ${PKGS} ${SOURCES}
 	cp /mingw32/bin/${WIN32DLLS} bin/
 
 .PHONY: debug
 debug: ${SOURCES}
 	-mkdir bin
-	valac -g -o bin/vala-danmaku-client_debug --thread ${PKGS} ${SOURCES}
+	valac -g -X -DGETTEXT_PACKAGE=\"vala-danmaku-client\" -o bin/vala-danmaku-client_debug --thread ${PKGS} ${SOURCES}
 
 .PHONY: win32_debug
 win32_debug: ${SOURCES}
 	-mkdir bin
-	valac -g -X -mwindows -o bin/vala-danmaku-client_debug --thread ${PKGS} ${SOURCES}
+	valac -g -X -mwindows -X -DGETTEXT_PACKAGE=\"vala-danmaku-client\" -o bin/vala-danmaku-client_debug --thread ${PKGS} ${SOURCES}
 	cp /mingw32/bin/${WIN32DLLS} bin/
 
 .PHONY: install
