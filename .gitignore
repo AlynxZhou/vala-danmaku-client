@@ -53,5 +53,3 @@ dkms.conf
 
 # MingW Dlls
 bin/*.dll
-bin/vala-danmaku-client.exe
-bin/vala-danmaku-client

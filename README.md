@@ -2,6 +2,9 @@
 
 A danmaku client on desktop, written in Vala and using GTK+, Cairo.
 
+If you are using GNOME and multi-monitor as join display, multi-monitor in this program may work wrongly due to gnome bug, you can open settings->device->display and change some 
+settings (sometimes GNOME sets your internal HiDPi monitor a lower resulotion and cause this bug, set it back to high resulotion with 200% scale will correct it).
+
 Dependency:
 
 - glib-2.0

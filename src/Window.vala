@@ -26,6 +26,7 @@ namespace VDMKC {
 					this.password_entry.set_editable(false);
 					this.animate_time_entry.set_editable(false);
 					this.slot_length_entry.set_editable(false);
+					this.app.status.set_label("Code by AlynxZhou, GPLv3 License.");
 					this.app.animate_time = (int64)(double.parse(this.animate_time_entry.get_text()) * 1000);
 					if (this.app.animate_time < 1000) {
 						this.app.animate_time = 10 * 1000;
@@ -33,10 +34,10 @@ namespace VDMKC {
 						this.app.status.set_label("显示时间太短，设为默认值 10 秒！");
 					}
 					this.app.slot_length = int.parse(this.slot_length_entry.get_text());
-					this.app.status.set_label("Code by AlynxZhou, GPLv3 License.");
 					this.app.poller = new Poller(this.app, this.server_entry.get_text(), this.channel_entry.get_text(), this.password_entry.get_text());
 					this.app.poller.start_poll();
-					for (var i = 0; i < this.get_screen().get_display().get_n_monitors(); ++i) {
+					var monitor_count = this.get_screen().get_display().get_n_monitors();
+					for (var i = 0; i < monitor_count; ++i) {
 						var canvas = new Canvas(this.app, i);
 						this.app.canvases.add(canvas);
 						canvas.show_all();

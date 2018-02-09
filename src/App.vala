@@ -12,7 +12,7 @@ namespace VDMKC {
 		public signal void alloc_danmaku(Danmaku danmaku);
 		public App() {
 			this.animate_time = 10 * 1000;
-			this.slot_length = 30;
+			this.slot_length = 18;
 			this.fps = 30;
 			this.danmakus = new Gee.LinkedList<Danmaku>();
 			this.canvases = new Gee.ArrayList<Canvas>();

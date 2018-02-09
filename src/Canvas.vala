@@ -18,16 +18,7 @@ namespace VDMKC {
 			this.set_accept_focus(false);
 			this.set_position(Gtk.WindowPosition.CENTER);
 			this.set_gravity(Gdk.Gravity.NORTH_WEST);
-			// Set window size
-			// this.move_to_monitor(mon);
-			int x;
-			int y;
-			this.get_position(out x, out y);
-			x += this.get_screen().get_display().get_monitor(mon).get_geometry().x;
-			y += this.get_screen().get_display().get_monitor(mon).get_geometry().y;
-			this.move(x, y);
-			var geometry = this.get_screen().get_display().get_monitor(mon).get_geometry();
-			this.set_default_size(geometry.width, geometry.height);
+			this.set_to_monitor(mon);
 			// Do NOT use Gtk.Widget.set_opacity(0) because it will make the whole window including DrawingArea transparent.
 			// ((Gtk.Widget)this).set_opacity(0);
 			this.set_transparent_visual();
@@ -58,12 +49,18 @@ namespace VDMKC {
 				return true;
 			});
 			this.danmaku_area.draw.connect((context) => {
-				context.set_source_rgba(1, 1, 1, 0.5);
-				context.set_font_size(200);
-				context.move_to(100, 100);
-				context.show_text(mon.to_string());
 				int width = this.danmaku_area.get_allocated_width();
 				int height = this.danmaku_area.get_allocated_height();
+				// Multi-monitor number display for debug.
+				// context.set_source_rgba(1, 1, 1, 0.5);
+				// context.set_font_size(height / 5);
+				// context.move_to(width / 20, height / 5);
+				// context.text_path(mon.to_string());
+				// context.fill();
+				// context.set_source_rgba(0, 0, 0, 0.7);
+				// context.move_to(width / 20, height / 5);
+				// context.text_path(mon.to_string());
+				// context.stroke();
 				int64 time = get_real_time() / 1000;
 				for (var i = 0; i < this.app.danmakus.size; ++i)
 					this.app.danmakus.@get(i).draw(context, time, width, height);
@@ -150,13 +147,16 @@ namespace VDMKC {
 				((Gtk.Widget)this).input_shape_combine_region(region);
 			}
 		}
-		public void move_to_monitor(int mon) {
+		public void set_to_monitor(int mon) {
 			int x;
 			int y;
 			this.get_position(out x, out y);
-			x += this.get_screen().get_display().get_monitor(mon).get_geometry().x;
-			y += this.get_screen().get_display().get_monitor(mon).get_geometry().y;
+			var geometry = this.get_screen().get_display().get_monitor(mon).get_geometry();
+			x += geometry.x;
+			y += geometry.y;
 			this.move(x, y);
+			this.set_default_size(geometry.width, geometry.height);
+			this.maximize();
 		}
 	}
 }
