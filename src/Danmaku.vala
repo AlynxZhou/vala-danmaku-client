@@ -60,7 +60,7 @@ namespace VDMKC {
 				context.set_source_rgba(1, 0, 0, 0.9);
 				break;
 			case Color.GREEN:
-				context.set_source_rgba(0, 1, 0, 0.9);
+				context.set_source_rgba(0, 0.8, 0, 0.9);
 				break;
 			case Color.BLUE:
 				context.set_source_rgba(0, 0, 1, 0.9);
@@ -69,10 +69,10 @@ namespace VDMKC {
 				context.set_source_rgba(0, 0, 0, 0.9);
 				break;
 			case Color.YELLOW:
-				context.set_source_rgba(1, 1, 0, 0.9);
+				context.set_source_rgba(0.9, 0.7, 0, 0.9);
 				break;
 			case Color.CYAN:
-				context.set_source_rgba(0, 1, 1, 0.9);
+				context.set_source_rgba(0, 0.7, 0.9, 0.9);
 				break;
 			case Color.PURPLE:
 				context.set_source_rgba(0.5, 0, 0.5, 0.9);
@@ -99,10 +99,15 @@ namespace VDMKC {
 			if (this.position == Position.FLY) {
 				var x = canvas_width - (double)(frame_time - this.start_display_time) / this.display_time * (canvas_width + text_extents.width);
 				context.move_to(x, y);
-				context.text_path(this.content);
-				context.fill();
-				if (this.color == Color.WHITE || this.color == Color.GREEN || this.color == Color.YELLOW || this.color == Color.CYAN) {
+				context.show_text(this.content);
+				if (this.color == Color.WHITE) {
 					this.set_context_rgba(context, Color.BLACK);
+					context.move_to(x, y);
+					context.text_path(this.content);
+					context.stroke();
+				}
+				if (this.color == Color.BLACK) {
+					this.set_context_rgba(context, Color.WHITE);
 					context.move_to(x, y);
 					context.text_path(this.content);
 					context.stroke();
@@ -114,10 +119,15 @@ namespace VDMKC {
 			} else {
 				var x = canvas_width / 2 - text_extents.width / 2;
 				context.move_to(x, y);
-				context.text_path(this.content);
-				context.fill();
-				if (this.color == Color.WHITE || this.color == Color.GREEN || this.color == Color.YELLOW || this.color == Color.CYAN) {
+				context.show_text(this.content);
+				if (this.color == Color.WHITE) {
 					this.set_context_rgba(context, Color.BLACK);
+					context.move_to(x, y);
+					context.text_path(this.content);
+					context.stroke();
+				}
+				if (this.color == Color.BLACK) {
+					this.set_context_rgba(context, Color.WHITE);
 					context.move_to(x, y);
 					context.text_path(this.content);
 					context.stroke();

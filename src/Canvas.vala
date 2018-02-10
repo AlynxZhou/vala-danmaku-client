@@ -5,6 +5,7 @@ namespace VDMKC {
 		private bool[] fly_slots;
 		private bool[] fix_slots;
 		private Rand rand;
+		private bool drawing;
 		public Canvas(App app, int mon) {
 			this.app = app;
 			this.set_title("VDMKC.Canvas");
@@ -19,6 +20,10 @@ namespace VDMKC {
 			this.set_position(Gtk.WindowPosition.CENTER);
 			this.set_gravity(Gdk.Gravity.NORTH_WEST);
 			this.set_to_monitor(mon);
+			this.set_input_through();
+			this.set_keep_above(true);
+			// Set always on visible workspace.
+			this.stick();
 			// Do NOT use Gtk.Widget.set_opacity(0) because it will make the whole window including DrawingArea transparent.
 			// ((Gtk.Widget)this).set_opacity(0);
 			this.set_transparent_visual();
@@ -30,10 +35,6 @@ namespace VDMKC {
 				context.set_operator(Cairo.Operator.OVER);
 				return false;
 			});
-			this.set_input_through();
-			this.set_keep_above(true);
-			// Set always on visible workspace.
-			this.stick();
 			this.fly_slots = new bool[this.app.slot_number];
 			this.fix_slots = new bool[this.app.slot_number];
 			for (var i = 0; i < this.app.slot_number; ++i) {
@@ -41,12 +42,13 @@ namespace VDMKC {
 				this.fix_slots[i] = false;
 			}
 			this.danmaku_area = new Gtk.DrawingArea();
+			this.drawing = false;
 			// Animate.
-			Timeout.add(1000 / this.app.fps, () => {
-				this.danmaku_area.queue_draw();
-				this.set_keep_above(true);
-				return true;
-			});
+			// Timeout.add(1000 / this.app.fps, () => {
+			// 	this.danmaku_area.queue_draw();
+			// 	this.set_keep_above(true);
+			// 	return true;
+			// });
 			this.danmaku_area.draw.connect((context) => {
 				int width = this.danmaku_area.get_allocated_width();
 				int height = this.danmaku_area.get_allocated_height();
@@ -63,6 +65,9 @@ namespace VDMKC {
 				int64 time = get_real_time() / 1000;
 				for (var i = 0; i < this.app.danmakus.size; ++i)
 					this.app.danmakus.@get(i).draw(context, time, width, height);
+				Thread.usleep(1000 * 1000 / this.app.fps);
+				this.danmaku_area.queue_draw();
+				this.set_keep_above(true);
 				return false;
 			});
 			this.add(this.danmaku_area);
