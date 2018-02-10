@@ -1,11 +1,9 @@
 namespace VDMKC {
 	public class Canvas : Gtk.Window {
 		private App app;
-		private Gtk.DrawingArea danmaku_area;
 		private bool[] fly_slots;
 		private bool[] fix_slots;
 		private Rand rand;
-		private bool drawing;
 		public Canvas(App app, int mon) {
 			this.app = app;
 			this.set_title("VDMKC.Canvas");
@@ -27,31 +25,15 @@ namespace VDMKC {
 			// Do NOT use Gtk.Widget.set_opacity(0) because it will make the whole window including DrawingArea transparent.
 			// ((Gtk.Widget)this).set_opacity(0);
 			this.set_transparent_visual();
+			// Keep animation.
 			((Gtk.Widget)this).set_app_paintable(true);
 			((Gtk.Widget)this).draw.connect((context) => {
 				context.set_source_rgba(1, 1, 1, 0);
 				context.set_operator(Cairo.Operator.SOURCE);
 				context.paint();
 				context.set_operator(Cairo.Operator.OVER);
-				return false;
-			});
-			this.fly_slots = new bool[this.app.slot_number];
-			this.fix_slots = new bool[this.app.slot_number];
-			for (var i = 0; i < this.app.slot_number; ++i) {
-				this.fly_slots[i] = false;
-				this.fix_slots[i] = false;
-			}
-			this.danmaku_area = new Gtk.DrawingArea();
-			this.drawing = false;
-			// Animate.
-			// Timeout.add(1000 / this.app.fps, () => {
-			// 	this.danmaku_area.queue_draw();
-			// 	this.set_keep_above(true);
-			// 	return true;
-			// });
-			this.danmaku_area.draw.connect((context) => {
-				int width = this.danmaku_area.get_allocated_width();
-				int height = this.danmaku_area.get_allocated_height();
+				int width = this.get_allocated_width();
+				int height = this.get_allocated_height();
 				// Multi-monitor number display for debug.
 				// context.set_source_rgba(1, 1, 1, 0.5);
 				// context.set_font_size(height / 5);
@@ -66,11 +48,16 @@ namespace VDMKC {
 				for (var i = 0; i < this.app.danmakus.size; ++i)
 					this.app.danmakus.@get(i).draw(context, time, width, height);
 				Thread.usleep(1000 * 1000 / this.app.fps);
-				this.danmaku_area.queue_draw();
+				this.queue_draw();
 				this.set_keep_above(true);
 				return false;
 			});
-			this.add(this.danmaku_area);
+			this.fly_slots = new bool[this.app.slot_number];
+			this.fix_slots = new bool[this.app.slot_number];
+			for (var i = 0; i < this.app.slot_number; ++i) {
+				this.fly_slots[i] = false;
+				this.fix_slots[i] = false;
+			}
 			this.rand = new Rand.with_seed((uint8)(get_real_time() / 1000));
 			this.app.alloc_danmaku.connect((app, danmaku) => {
 				this.app.danmakus.add(danmaku);
