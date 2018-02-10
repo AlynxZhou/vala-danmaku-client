@@ -1,4 +1,5 @@
-/* main.vala
+/*
+ * main.vala
  *
  * Copyright (C) 2018 AlynxZhou
  *

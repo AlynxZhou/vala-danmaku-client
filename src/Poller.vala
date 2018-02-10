@@ -29,7 +29,7 @@ namespace VDMKC {
 				while (this.poll) {
 					Soup.Message message;
 					if (this.poll_offset != 0)
-						message = new Soup.Message("GET", this.uri + "?time=" + this.poll_offset.to_string());
+						message = new Soup.Message("GET", this.uri + "?offset=" + this.poll_offset.to_string());
 					else
 						message = new Soup.Message("GET", this.uri);
 					message.request_headers.append("X-Danmaku-Auth-Key", this.password);
@@ -50,21 +50,21 @@ namespace VDMKC {
 					}
 					var root_node = parser.get_root();
 					if (root_node == null) {
-						this.app.status.set_label(_("Warning: Invalid Node, continue."));
+						this.app.status.set_label(_("Warning: Invalid JSON Node, continue."));
 						continue;
 					}
-					var danmakus = root_node.get_array();
+					var danmakus = root_node.get_object().get_array_member("result");
 					var danmakus_length = danmakus.get_length();
 					for (var i = 0; i < danmakus_length; ++i) {
 						var danmaku = danmakus.get_object_element(i);
 						var content = danmaku.get_string_member("content");
 						var position = danmaku.get_string_member("position");
 						var color = danmaku.get_string_member("color");
-						var time = danmaku.get_int_member("time");
+						var offset = danmaku.get_int_member("offset");
 						this.app.status.set_label(_("Danmaku: %s, %s, %s").printf(position, color, content));
-						this.app.alloc_danmaku(new Danmaku(this.app, content, color, position, time));
-						if (time >= this.poll_offset)
-							this.poll_offset = time + 1;
+						this.app.alloc_danmaku(new Danmaku(this.app, content, color, position, offset));
+						if (offset >= this.poll_offset)
+							this.poll_offset = offset + 1;
 					}
 					Thread.usleep(500 * 1000);
 				}

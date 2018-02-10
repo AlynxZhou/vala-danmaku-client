@@ -6,13 +6,13 @@ namespace VDMKC {
 		public string content;
 		public Color color;
 		public Position position;
-		public int64 time;
+		public int64 offset;
 		public int slot;
 		private int64 display_time;
 		private int64 start_display_time;
 		public signal void close();
 		public signal void left();
-		public Danmaku(App app, string content, string color_str, string position_str, int64 time) {
+		public Danmaku(App app, string content, string color_str, string position_str, int64 offset) {
 			this.app = app;
 			this.content = content;
 			switch (color_str) {
@@ -52,7 +52,7 @@ namespace VDMKC {
 				this.position = Position.FLY;
 				break;
 			}
-			this.time = time;
+			this.offset = offset;
 		}
 		public void set_context_rgba(Cairo.Context context, Color color) {
 			switch (color) {

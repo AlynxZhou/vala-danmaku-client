@@ -32,7 +32,7 @@ msgid "Error: %s %s: %s"
 msgstr "错误：%s %s：%s"
 
 #: src/Poller.vala:53
-msgid "Warning: Invalid Node, continue."
+msgid "Warning: Invalid JSON Node, continue."
 msgstr "警告：无效的 JSON 节点，跳过并继续。"
 
 #: src/Poller.vala:64
@@ -45,7 +45,7 @@ msgid "Switch: "
 msgstr "开关："
 
 #: src/Window.vala:29 src/Window.vala:122
-msgid "Code by AlynxZhou, GPLv3 License."
+msgid "Code by AlynxZhou under GPLv3 License."
 msgstr "作者 AlynxZhou，以 GPLv3 许可发布。"
 
 #: src/Window.vala:34
@@ -53,7 +53,7 @@ msgid "Display time too short and set it to default 10s!"
 msgstr "显示时间过短，自动修改为默认值 10 秒！"
 
 #: src/Window.vala:62
-msgid "Server Link: "
+msgid "Server Address: "
 msgstr "服务器地址："
 
 #: src/Window.vala:74

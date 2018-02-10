@@ -26,7 +26,7 @@ namespace VDMKC {
 					this.password_entry.set_editable(false);
 					this.display_time_entry.set_editable(false);
 					this.slot_number_entry.set_editable(false);
-					this.app.status.set_label(_("Code by AlynxZhou, GPLv3 License."));
+					this.app.status.set_label(_("Code by AlynxZhou under GPLv3 License."));
 					this.app.display_time = (int64)(double.parse(this.display_time_entry.get_text()) * 1000);
 					if (this.app.display_time < 1000) {
 						this.app.display_time = 10 * 1000;
@@ -59,7 +59,7 @@ namespace VDMKC {
 			child_boxes[0].pack_end(this.app.poll_switch, true, false, 0);
 			box.pack_start(child_boxes[0], true, false, 0);
 			child_boxes[1] = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 10);
-			child_boxes[1].pack_start(new Gtk.Label(_("Server Link: ")), false, false, 0);
+			child_boxes[1].pack_start(new Gtk.Label(_("Server Address: ")), false, false, 0);
 			this.server_entry = new Gtk.Entry();
 			this.server_entry.set_text("http://danmaku.ismyonly.one:2333/");
 			this.server_entry.activate.connect(() => {
@@ -119,7 +119,7 @@ namespace VDMKC {
 			});
 			child_boxes[5].pack_end(this.slot_number_entry, true, true, 0);
 			box.pack_start(child_boxes[5], true, false, 0);
-			this.app.status = new Gtk.Label(_("Code by AlynxZhou, GPLv3 License."));
+			this.app.status = new Gtk.Label(_("Code by AlynxZhou under GPLv3 License."));
 			this.app.status.set_ellipsize(Pango.EllipsizeMode.END);
 			box.pack_end(this.app.status, false, false, 0);
 			this.add(box);
