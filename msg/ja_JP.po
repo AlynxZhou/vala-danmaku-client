@@ -1,0 +1,69 @@
+# vala-danmaku-client zh_CN.po
+# Copyright (C) 2018 AlynxZhou
+# This file is distributed under the same license as the vala-danmaku-client package.
+# AlynxZhou <alynx.zhou@gmail.com>, 2018.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 2.0.0\n"
+"POT-Creation-Date: 2018-02-10 07:36+0800\n"
+"Last-Translator: Li Gengtao <975314540@qq.com>\n"
+"Language: ja_JP\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/main.vala:25
+msgid "Cannot run without thread support.\n"
+msgstr "ハードウェアマルチスレッディングの支持はないので，手続きは実行できない。\n"
+
+#: src/Poller.vala:42
+#, c-format
+msgid "Error: %s"
+msgstr "エラー：%s"
+
+#: src/Poller.vala:48
+#, c-format
+msgid "Error: %s %s: %s"
+msgstr "错误：%s %s：%s"
+
+#: src/Poller.vala:53
+msgid "Warning: Invalid JSON Node, continue."
+msgstr "警告:无効なJOSNノード，スキップして継続。"
+
+#: src/Poller.vala:64
+#, c-format
+msgid "Danmaku: %s, %s, %s"
+msgstr "弾幕：%s，%s，%s"
+
+#: src/Window.vala:19
+msgid "Switch: "
+msgstr "スイッチ："
+
+#: src/Window.vala:29 src/Window.vala:122
+msgid "Code by AlynxZhou under GPLv3 License."
+msgstr "作者の AlynxZhou は，GPLv3 で配信を許可した。"
+
+#: src/Window.vala:34
+msgid "Display time too short and set it to default 10s!"
+msgstr "表示時間が短く、自動的にデフォルト値10秒に変更された！"
+
+#: src/Window.vala:62
+msgid "Server Address: "
+msgstr "サーバアドレス："
+
+#: src/Window.vala:74
+msgid "Channel Name: "
+msgstr "チャンネル名："
+
+#: src/Window.vala:86
+msgid "Channel Password (If have): "
+msgstr "チャネルのパスワード（もしあれば）："
+
+#: src/Window.vala:99
+msgid "Danmaku Display Time (Second): "
+msgstr "弾幕表示時間（秒）："
+
+#: src/Window.vala:111
+msgid "Danmaku Slot Number: "
+msgstr "弾幕行数："
