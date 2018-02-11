@@ -34,6 +34,11 @@ namespace VDMKC {
 						this.app.status.set_label(_("Display time too short and set it to default 10s!"));
 					}
 					this.app.slot_number = int.parse(this.slot_number_entry.get_text());
+					if (this.app.slot_number <= 0) {
+						this.app.slot_number = 18;
+						this.slot_number_entry.set_text(this.app.slot_number.to_string());
+						this.app.status.set_label(_("Slot number too small and set it to default 18!"));
+					}
 					this.app.poller = new Poller(this.app, this.server_entry.get_text(), this.channel_entry.get_text(), this.password_entry.get_text());
 					this.app.poller.start_poll();
 					var monitor_count = this.get_screen().get_display().get_n_monitors();

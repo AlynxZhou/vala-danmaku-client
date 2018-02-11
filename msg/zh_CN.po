@@ -48,6 +48,10 @@ msgstr "作者 AlynxZhou，以 GPLv3 许可发布。"
 msgid "Display time too short and set it to default 10s!"
 msgstr "显示时间过短，自动修改为默认值 10 秒！"
 
+#: src/Window.vala:40
+msgid "Slot number too small and set it to default 18!"
+msgstr "弹幕槽数过小，自动修改为默认值 18！"
+
 #: src/Window.vala:62
 msgid "Server Address: "
 msgstr "服务器地址："

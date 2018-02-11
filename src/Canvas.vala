@@ -4,6 +4,7 @@ namespace VDMKC {
 		private bool[] fly_slots;
 		private bool[] fix_slots;
 		private Rand rand;
+		private Pango.FontDescription font_desc;
 		public Canvas(App app, int mon) {
 			this.app = app;
 			this.set_title("VDMKC.Canvas");
@@ -25,28 +26,27 @@ namespace VDMKC {
 			// Do NOT use Gtk.Widget.set_opacity(0) because it will make the whole window including DrawingArea transparent.
 			// ((Gtk.Widget)this).set_opacity(0);
 			this.set_transparent_visual();
+			this.font_desc = new Pango.FontDescription();
+			this.font_desc.set_family("Sans");
+			this.font_desc.set_weight(Pango.Weight.BOLD);
 			// Keep animation.
 			((Gtk.Widget)this).set_app_paintable(true);
 			((Gtk.Widget)this).draw.connect((context) => {
 				context.set_source_rgba(1, 1, 1, 0);
 				context.set_operator(Cairo.Operator.SOURCE);
 				context.paint();
-				context.set_operator(Cairo.Operator.OVER);
 				int width = this.get_allocated_width();
 				int height = this.get_allocated_height();
-				// Multi-monitor number display for debug.
-				// context.set_source_rgba(1, 1, 1, 0.5);
-				// context.set_font_size(height / 5);
-				// context.move_to(width / 20, height / 5);
-				// context.text_path(mon.to_string());
-				// context.fill();
-				// context.set_source_rgba(0, 0, 0, 0.7);
-				// context.move_to(width / 20, height / 5);
-				// context.text_path(mon.to_string());
-				// context.stroke();
 				int64 time = get_real_time() / 1000;
+				var font_size = height / this.app.slot_number;
+				this.font_desc.set_absolute_size(font_size * Pango.SCALE);
+				var layout = Pango.cairo_create_layout(context);
+				layout.set_font_description(this.font_desc);
+				layout.set_ellipsize(Pango.EllipsizeMode.NONE);
+				layout.set_width(-1);
+				layout.set_spacing(0);
 				for (var i = 0; i < this.app.danmakus.size; ++i)
-					this.app.danmakus.@get(i).draw(context, time, width, height);
+					this.app.danmakus.@get(i).draw(context, layout, time, width, height, font_size);
 				Thread.usleep(1000 * 1000 / this.app.fps);
 				this.queue_draw();
 				this.set_keep_above(true);

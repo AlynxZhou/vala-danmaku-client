@@ -48,6 +48,10 @@ msgstr "作者の AlynxZhou は，GPLv3 で配信を許可した。"
 msgid "Display time too short and set it to default 10s!"
 msgstr "表示時間が短く、自動的にデフォルト値10秒に変更された！"
 
+#: src/Window.vala:40
+msgid "Slot number too small and set it to default 18!"
+msgstr "弾幕行数小さすぎると、自動的にデフォルト値の18に変更されます！"
+
 #: src/Window.vala:62
 msgid "Server Address: "
 msgstr "サーバアドレス："

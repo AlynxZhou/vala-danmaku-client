@@ -66,7 +66,7 @@ namespace VDMKC {
 				context.set_source_rgba(0, 0, 1, 1);
 				break;
 			case Color.BLACK:
-				context.set_source_rgba(0.1, 0.1, 0.1, 1);
+				context.set_source_rgba(0, 0, 0, 1);
 				break;
 			case Color.YELLOW:
 				context.set_source_rgba(0.9, 0.7, 0, 1);
@@ -78,7 +78,7 @@ namespace VDMKC {
 				context.set_source_rgba(0.5, 0, 0.5, 1);
 				break;
 			case Color.WHITE:
-				context.set_source_rgba(0.9, 0.9, 0.9, 1);
+				context.set_source_rgba(1, 1, 1, 1);
 				break;
 			}
 		}
@@ -87,27 +87,70 @@ namespace VDMKC {
 			this.display_time = display_time;
 			this.start_display_time = get_real_time() / 1000;
 		}
-		public void draw(Cairo.Context context, int64 frame_time, int canvas_width, int canvas_height) {
-			this.set_context_rgba(context, this.color);
-			context.select_font_face("Noto Sans CJK SC Regular", Cairo.FontSlant.NORMAL, Cairo.FontWeight.BOLD);
-			var font_size = canvas_height / this.app.slot_number;
-			context.set_font_size(font_size);
-			Cairo.TextExtents text_extents;
-			context.text_extents(this.content, out text_extents);
-			var y = font_size * this.slot - text_extents.y_bearing;
+		public void draw(Cairo.Context context, Pango.Layout layout, int64 frame_time, int canvas_width, int canvas_height, int font_size) {
+			layout.set_text(this.content, -1);
+			Pango.Rectangle text_extents;
+			layout.get_pixel_extents(out text_extents, null);
+			int y = font_size * this.slot + (font_size - text_extents.height) / 2 - text_extents.y;
 			if (this.position == Position.FLY) {
-				var x = canvas_width - (double)(frame_time - this.start_display_time) / this.display_time * (canvas_width + text_extents.width);
+				int x = canvas_width - (int)((frame_time - this.start_display_time) * (canvas_width + text_extents.width) / this.display_time) - text_extents.x;
+				if (this.color == Color.WHITE) {
+					this.set_context_rgba(context, Color.BLACK);
+					context.move_to(x + font_size / 40, y + font_size / 40);
+					Pango.cairo_show_layout(context, layout);
+					context.move_to(x + font_size / 40, y - font_size / 40);
+					Pango.cairo_show_layout(context, layout);
+					context.move_to(x - font_size / 40, y + font_size / 40);
+					Pango.cairo_show_layout(context, layout);
+					context.move_to(x - font_size / 40, y - font_size / 40);
+					Pango.cairo_show_layout(context, layout);
+				}
+				if (this.color == Color.BLACK) {
+					this.set_context_rgba(context, Color.WHITE);
+					context.move_to(x + font_size / 40, y + font_size / 40);
+					Pango.cairo_show_layout(context, layout);
+					context.move_to(x + font_size / 40, y - font_size / 40);
+					Pango.cairo_show_layout(context, layout);
+					context.move_to(x - font_size / 40, y + font_size / 40);
+					Pango.cairo_show_layout(context, layout);
+					context.move_to(x - font_size / 40, y - font_size / 40);
+					Pango.cairo_show_layout(context, layout);
+				}
+				this.set_context_rgba(context, this.color);
 				context.move_to(x, y);
-				context.show_text(this.content);
+				Pango.cairo_show_layout(context, layout);
 				if (x + text_extents.width < canvas_width)
 					this.left();
-				if (frame_time - this.start_display_time > this.display_time)
+				if (frame_time - this.start_display_time > this.display_time || x + text_extents.width < 0)
 					this.close();
 			} else {
-				var x = canvas_width / 2 - text_extents.width / 2;
+				int x = canvas_width / 2 - text_extents.width / 2 - text_extents.x;
+				if (this.color == Color.WHITE) {
+					this.set_context_rgba(context, Color.BLACK);
+					context.move_to(x + font_size / 40, y + font_size / 40);
+					Pango.cairo_show_layout(context, layout);
+					context.move_to(x + font_size / 40, y - font_size / 40);
+					Pango.cairo_show_layout(context, layout);
+					context.move_to(x - font_size / 40, y + font_size / 40);
+					Pango.cairo_show_layout(context, layout);
+					context.move_to(x - font_size / 40, y - font_size / 40);
+					Pango.cairo_show_layout(context, layout);
+				}
+				if (this.color == Color.BLACK) {
+					this.set_context_rgba(context, Color.WHITE);
+					context.move_to(x + font_size / 40, y + font_size / 40);
+					Pango.cairo_show_layout(context, layout);
+					context.move_to(x + font_size / 40, y - font_size / 40);
+					Pango.cairo_show_layout(context, layout);
+					context.move_to(x - font_size / 40, y + font_size / 40);
+					Pango.cairo_show_layout(context, layout);
+					context.move_to(x - font_size / 40, y - font_size / 40);
+					Pango.cairo_show_layout(context, layout);
+				}
+				this.set_context_rgba(context, this.color);
 				context.move_to(x, y);
-				context.show_text(this.content);
-				if (frame_time - this.start_display_time > this.display_time)
+				Pango.cairo_show_layout(context, layout);
+				if (frame_time - this.start_display_time > this.display_time || x + text_extents.width < 0)
 					this.close();
 			}
 		}
