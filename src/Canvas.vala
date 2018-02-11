@@ -5,6 +5,7 @@ namespace VDMKC {
 		private bool[] fix_slots;
 		private Rand rand;
 		private Pango.FontDescription font_desc;
+		private Pango.Layout? layout;
 		public Canvas(App app, int mon) {
 			this.app = app;
 			this.set_title("VDMKC.Canvas");
@@ -29,10 +30,11 @@ namespace VDMKC {
 			this.font_desc = new Pango.FontDescription();
 			this.font_desc.set_family("Sans");
 			this.font_desc.set_weight(Pango.Weight.BOLD);
+			this.layout = null;
 			// Keep animation.
 			((Gtk.Widget)this).set_app_paintable(true);
 			((Gtk.Widget)this).draw.connect((context) => {
-				context.set_source_rgba(1, 1, 1, 0);
+				context.set_source_rgba(0, 0, 0, 0);
 				context.set_operator(Cairo.Operator.SOURCE);
 				context.paint();
 				int width = this.get_allocated_width();
@@ -40,13 +42,15 @@ namespace VDMKC {
 				int64 time = get_real_time() / 1000;
 				var font_size = height / this.app.slot_number;
 				this.font_desc.set_absolute_size(font_size * Pango.SCALE);
-				var layout = Pango.cairo_create_layout(context);
-				layout.set_font_description(this.font_desc);
-				layout.set_ellipsize(Pango.EllipsizeMode.NONE);
-				layout.set_width(-1);
-				layout.set_spacing(0);
+				if (this.layout == null) {
+					this.layout = Pango.cairo_create_layout(context);
+					this.layout.set_font_description(this.font_desc);
+					this.layout.set_ellipsize(Pango.EllipsizeMode.NONE);
+					this.layout.set_width(-1);
+					this.layout.set_spacing(0);
+				}
 				for (var i = 0; i < this.app.danmakus.size; ++i)
-					this.app.danmakus.@get(i).draw(context, layout, time, width, height, font_size);
+					this.app.danmakus.@get(i).draw(context, this.layout, time, width, height, font_size);
 				Thread.usleep(1000 * 1000 / this.app.fps);
 				this.queue_draw();
 				this.set_keep_above(true);
@@ -103,7 +107,8 @@ namespace VDMKC {
 					}
 					break;
 				case Position.FLY:
-					for (var i = 3; i < this.app.slot_number + 3; ++i) {
+					int slot = this.rand.int_range(3, this.app.slot_number - 3);
+					for (var i = slot; i < this.app.slot_number + slot; ++i) {
 						if (i >= this.app.slot_number)
 							i %= this.app.slot_number;
 						if (!this.fly_slots[i]) {
@@ -114,7 +119,6 @@ namespace VDMKC {
 						}
 					}
 					if (full) {
-						int slot = this.rand.int_range(0, this.app.slot_number);
 						this.fly_slots[slot] = true;
 						danmaku.start_display(slot, this.app.display_time);
 					}

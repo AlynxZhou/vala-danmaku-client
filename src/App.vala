@@ -13,7 +13,7 @@ namespace VDMKC {
 		public App() {
 			this.display_time = 10 * 1000;
 			this.slot_number = 18;
-			this.fps = 30;
+			this.fps = 60;
 			this.danmakus = new Gee.LinkedList<Danmaku>();
 			this.canvases = new Gee.ArrayList<Canvas>();
 		}
