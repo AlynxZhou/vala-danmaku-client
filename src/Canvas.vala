@@ -20,7 +20,6 @@ namespace VDMKC {
 			this.set_accept_focus(false);
 			this.set_position(Gtk.WindowPosition.CENTER);
 			this.set_gravity(Gdk.Gravity.NORTH_WEST);
-			this.set_to_monitor(mon);
 			this.set_input_through();
 			this.set_keep_above(true);
 			// Set always on visible workspace.
@@ -79,6 +78,7 @@ namespace VDMKC {
 				// this.set_keep_above(true);
 				return false;
 			});
+			this.set_to_monitor(mon);
 			this.fly_slots = new bool[this.app.slot_number];
 			this.fix_slots = new bool[this.app.slot_number];
 			for (var i = 0; i < this.app.slot_number; ++i) {
