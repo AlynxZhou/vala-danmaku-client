@@ -6,6 +6,7 @@ namespace VDMKC {
 		private Rand rand;
 		private Pango.FontDescription font_desc;
 		private Pango.Layout? layout;
+		private Gtk.DrawingArea danmaku_area;
 		public Canvas(App app, int mon) {
 			this.app = app;
 			this.set_title("VDMKC.Canvas");
@@ -37,6 +38,28 @@ namespace VDMKC {
 				context.set_source_rgba(0, 0, 0, 0);
 				context.set_operator(Cairo.Operator.SOURCE);
 				context.paint();
+				// int width = this.get_allocated_width();
+				// int height = this.get_allocated_height();
+				// int64 time = get_real_time() / 1000;
+				// var font_size = height / this.app.slot_number;
+				// this.font_desc.set_absolute_size(font_size * Pango.SCALE);
+				// if (this.layout == null) {
+				// 	this.layout = Pango.cairo_create_layout(context);
+				// 	this.layout.set_font_description(this.font_desc);
+				// 	this.layout.set_ellipsize(Pango.EllipsizeMode.NONE);
+				// 	this.layout.set_width(-1);
+				// 	this.layout.set_spacing(0);
+				// }
+				// for (var i = 0; i < this.app.danmakus.size; ++i)
+				// 	this.app.danmakus.@get(i).draw(context, this.layout, time, width, height, font_size);
+				// Thread.usleep(1000 * 1000 / this.app.fps);
+				// this.queue_draw();
+				this.set_keep_above(true);
+				return false;
+			});
+			this.danmaku_area = new Gtk.DrawingArea();
+			this.add(this.danmaku_area);
+			this.danmaku_area.draw.connect((context) => {
 				int width = this.get_allocated_width();
 				int height = this.get_allocated_height();
 				int64 time = get_real_time() / 1000;
@@ -52,8 +75,8 @@ namespace VDMKC {
 				for (var i = 0; i < this.app.danmakus.size; ++i)
 					this.app.danmakus.@get(i).draw(context, this.layout, time, width, height, font_size);
 				Thread.usleep(1000 * 1000 / this.app.fps);
-				this.queue_draw();
-				this.set_keep_above(true);
+				this.danmaku_area.queue_draw();
+				// this.set_keep_above(true);
 				return false;
 			});
 			this.fly_slots = new bool[this.app.slot_number];
