@@ -9,6 +9,11 @@ linux: ${MSGOBJ} ${SOURCES}
 	cp -R locale/ bin/linux/
 	valac --Xcc=-O2 --Xcc=-DGETTEXT_PACKAGE=\"vala-danmaku-client\" --thread ${PKGS} -o bin/linux/vala-danmaku-client ${SOURCES}
 
+macos: ${MSGOBJ} ${SOURCES}
+	mkdir -p bin/macos/
+	cp -R locale/ bin/macos/
+	valac --Xcc=-O2 --Xcc=-DGETTEXT_PACKAGE=\"vala-danmaku-client\" --thread ${PKGS} -o bin/macos/vala-danmaku-client ${SOURCES}
+
 # Use -X -mwindows to pass this to mingw and disable the console in Windows.
 win32: ${MSGOBJ} ${SOURCES}
 	mkdir -p bin/win32/
@@ -28,6 +33,12 @@ win32_debug: ${MSGOBJ} ${SOURCES}
 	cp -R locale/ bin/win32/
 	cp /mingw32/bin/${WIN32DLLS} bin/win32/
 	valac -g --Xcc=-DGETTEXT_PACKAGE=\"vala-danmaku-client\" --thread ${PKGS} -o bin/win32/vala-danmaku-client_debug ${SOURCES}
+
+.PHONY: macos_debug
+macos_debug: ${MSGOBJ} ${SOURCES}
+	mkdir -p bin/macos/
+	cp -R locale/ bin/macos/
+	valac -g --Xcc=-O2 --Xcc=-DGETTEXT_PACKAGE=\"vala-danmaku-client\" --thread ${PKGS} -o bin/macos/vala-danmaku-client_debug ${SOURCES}
 
 ${MSGOBJ}: locale/%/LC_MESSAGES/vala-danmaku-client.mo: msg/%.po
 	mkdir -p $(dir $@)

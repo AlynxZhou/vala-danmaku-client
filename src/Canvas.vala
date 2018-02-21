@@ -18,8 +18,10 @@ namespace VDMKC {
 			this.set_skip_pager_hint(true);
 			this.set_skip_taskbar_hint(true);
 			this.set_accept_focus(false);
-			this.set_position(Gtk.WindowPosition.CENTER);
+			// Do NOT use set_position(Gtk.WindowPosition.CENTER), which will cause macOS place drawing area top left corner in center.
+			// this.set_position(Gtk.WindowPosition.CENTER);
 			this.set_gravity(Gdk.Gravity.NORTH_WEST);
+			this.set_to_monitor(mon);
 			this.set_input_through();
 			this.set_keep_above(true);
 			// Set always on visible workspace.
@@ -27,37 +29,20 @@ namespace VDMKC {
 			// Do NOT use Gtk.Widget.set_opacity(0) because it will make the whole window including DrawingArea transparent.
 			// ((Gtk.Widget)this).set_opacity(0);
 			this.set_transparent_visual();
-			this.font_desc = new Pango.FontDescription();
-			this.font_desc.set_family("Sans");
-			this.font_desc.set_weight(Pango.Weight.BOLD);
-			this.layout = null;
-			// Keep animation.
+			// Set transparent background.
 			((Gtk.Widget)this).set_app_paintable(true);
 			((Gtk.Widget)this).draw.connect((context) => {
 				context.set_source_rgba(0, 0, 0, 0);
 				context.set_operator(Cairo.Operator.SOURCE);
 				context.paint();
-				// int width = this.get_allocated_width();
-				// int height = this.get_allocated_height();
-				// int64 time = get_real_time() / 1000;
-				// var font_size = height / this.app.slot_number;
-				// this.font_desc.set_absolute_size(font_size * Pango.SCALE);
-				// if (this.layout == null) {
-				// 	this.layout = Pango.cairo_create_layout(context);
-				// 	this.layout.set_font_description(this.font_desc);
-				// 	this.layout.set_ellipsize(Pango.EllipsizeMode.NONE);
-				// 	this.layout.set_width(-1);
-				// 	this.layout.set_spacing(0);
-				// }
-				// for (var i = 0; i < this.app.danmakus.size; ++i)
-				// 	this.app.danmakus.@get(i).draw(context, this.layout, time, width, height, font_size);
-				// Thread.usleep(1000 * 1000 / this.app.fps);
-				// this.queue_draw();
 				this.set_keep_above(true);
 				return false;
 			});
 			this.danmaku_area = new Gtk.DrawingArea();
-			this.add(this.danmaku_area);
+			this.font_desc = new Pango.FontDescription();
+			this.font_desc.set_family("Sans");
+			this.font_desc.set_weight(Pango.Weight.BOLD);
+			this.layout = null;
 			this.danmaku_area.draw.connect((context) => {
 				int width = this.get_allocated_width();
 				int height = this.get_allocated_height();
@@ -73,12 +58,12 @@ namespace VDMKC {
 				}
 				for (var i = 0; i < this.app.danmakus.size; ++i)
 					this.app.danmakus.@get(i).draw(context, this.layout, time, width, height, font_size);
+				// Keep animation.
 				Thread.usleep(1000 * 1000 / this.app.fps);
 				this.danmaku_area.queue_draw();
-				// this.set_keep_above(true);
 				return false;
 			});
-			this.set_to_monitor(mon);
+			this.add(this.danmaku_area);
 			this.fly_slots = new bool[this.app.slot_number];
 			this.fix_slots = new bool[this.app.slot_number];
 			for (var i = 0; i < this.app.slot_number; ++i) {
