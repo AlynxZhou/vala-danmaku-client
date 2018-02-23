@@ -50,20 +50,22 @@ namespace VDMKC {
 			this.font_desc.set_weight(Pango.Weight.BOLD);
 			this.layout = null;
 			this.danmaku_area.draw.connect((context) => {
-				var width = this.get_allocated_width();
-				var height = this.get_allocated_height();
-				int64 time = get_real_time() / 1000;
-				var font_size = height / this.app.slot_number;
-				this.font_desc.set_absolute_size(font_size * Pango.SCALE);
-				if (this.layout == null) {
-					this.layout = Pango.cairo_create_layout(context);
-					this.layout.set_font_description(this.font_desc);
-					this.layout.set_ellipsize(Pango.EllipsizeMode.NONE);
-					this.layout.set_width(-1);
-					this.layout.set_spacing(0);
+				if (this.danmakus.size > 0) {
+					var width = this.get_allocated_width();
+					var height = this.get_allocated_height();
+					int64 time = get_real_time() / 1000;
+					var font_size = height / this.app.slot_number;
+					this.font_desc.set_absolute_size(font_size * Pango.SCALE);
+					if (this.layout == null) {
+						this.layout = Pango.cairo_create_layout(context);
+						this.layout.set_font_description(this.font_desc);
+						this.layout.set_ellipsize(Pango.EllipsizeMode.NONE);
+						this.layout.set_width(-1);
+						this.layout.set_spacing(0);
+					}
+					for (var i = 0; i < this.danmakus.size; ++i)
+						this.danmakus.@get(i).draw(context, this.layout, time, width, height, font_size);
 				}
-				for (var i = 0; i < this.danmakus.size; ++i)
-					this.danmakus.@get(i).draw(context, this.layout, time, width, height, font_size);
 				// Keep animation.
 				Thread.usleep(1000 * 1000 / this.app.fps);
 				this.danmaku_area.queue_draw();
