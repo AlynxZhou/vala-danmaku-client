@@ -1,14 +1,19 @@
 namespace VDMKC {
 	public class Canvas : Gtk.Window {
 		private App app;
+		private int mon;
 		private bool[] fly_slots;
 		private bool[] fix_slots;
 		private Rand rand;
 		private Pango.FontDescription font_desc;
 		private Pango.Layout? layout;
 		private Gtk.DrawingArea danmaku_area;
+		private Gee.ConcurrentList<Danmaku> danmakus;
+		public signal void alloc_danmaku(Danmaku danmaku);
 		public Canvas(App app, int mon) {
 			this.app = app;
+			this.mon = mon;
+			this.danmakus = new Gee.ConcurrentList<Danmaku>();
 			this.set_title("VDMKC.Canvas");
 			this.set_icon_name("preferences-desktop-screensaver");
 			// Disable window border.
@@ -18,10 +23,10 @@ namespace VDMKC {
 			this.set_skip_pager_hint(true);
 			this.set_skip_taskbar_hint(true);
 			this.set_accept_focus(false);
-			// Do NOT use set_position(Gtk.WindowPosition.CENTER), which will cause macOS place drawing area top left corner in center.
+			// Do NOT use Gtk.Window.set_position(Gtk.WindowPosition.CENTER), which will cause macOS place drawing area top left corner in center.
 			// this.set_position(Gtk.WindowPosition.CENTER);
 			this.set_gravity(Gdk.Gravity.NORTH_WEST);
-			this.set_to_monitor(mon);
+			this.set_to_monitor(this.mon);
 			this.set_input_through();
 			this.set_keep_above(true);
 			// Set always on visible workspace.
@@ -32,6 +37,7 @@ namespace VDMKC {
 			// Set transparent background.
 			((Gtk.Widget)this).set_app_paintable(true);
 			((Gtk.Widget)this).draw.connect((context) => {
+				// Use Cairo.Context.set_operator(Cairo.Operator.SOURCE) when you want to clear transparent surface.
 				context.set_source_rgba(0, 0, 0, 0);
 				context.set_operator(Cairo.Operator.SOURCE);
 				context.paint();
@@ -44,8 +50,8 @@ namespace VDMKC {
 			this.font_desc.set_weight(Pango.Weight.BOLD);
 			this.layout = null;
 			this.danmaku_area.draw.connect((context) => {
-				int width = this.get_allocated_width();
-				int height = this.get_allocated_height();
+				var width = this.get_allocated_width();
+				var height = this.get_allocated_height();
 				int64 time = get_real_time() / 1000;
 				var font_size = height / this.app.slot_number;
 				this.font_desc.set_absolute_size(font_size * Pango.SCALE);
@@ -56,8 +62,8 @@ namespace VDMKC {
 					this.layout.set_width(-1);
 					this.layout.set_spacing(0);
 				}
-				for (var i = 0; i < this.app.danmakus.size; ++i)
-					this.app.danmakus.@get(i).draw(context, this.layout, time, width, height, font_size);
+				for (var i = 0; i < this.danmakus.size; ++i)
+					this.danmakus.@get(i).draw(context, this.layout, time, width, height, font_size);
 				// Keep animation.
 				Thread.usleep(1000 * 1000 / this.app.fps);
 				this.danmaku_area.queue_draw();
@@ -71,16 +77,26 @@ namespace VDMKC {
 				this.fix_slots[i] = false;
 			}
 			this.rand = new Rand.with_seed((uint8)(get_real_time() / 1000));
-			this.app.alloc_danmaku.connect((app, danmaku) => {
-				this.app.danmakus.add(danmaku);
+			this.alloc_danmaku.connect((danmaku) => {
+				this.danmakus.add(danmaku);
+#if __DEBUG__
+				stdout.printf("Canvas #%d: Saved: Danmaku #%d: %s\n", this.mon, this.danmakus.size - 1, danmaku.content);
+#endif
 				danmaku.close.connect((danmaku) => {
 					if (danmaku.position != Position.FLY)
 						this.fix_slots[danmaku.slot] = false;
-					this.app.danmakus.remove(danmaku);
+					this.danmakus.remove(danmaku);
+#if __DEBUG__
+					stdout.printf("Canvas #%d: Closed: Danmaku: %s\n", this.mon, danmaku.content);
+					stdout.printf("Canvas #%d: Alive danmakus size: %d\n", this.mon, this.danmakus.size);
+#endif
 				});
-				danmaku.left.connect((danmaku) => {
+				danmaku.leave.connect((danmaku) => {
 					if (danmaku.position == Position.FLY)
 						this.fly_slots[danmaku.slot] = false;
+#if __DEBUG__
+					stdout.printf("Canvas #%d: Left: Danmaku: %s\n", this.mon, danmaku.content);
+#endif
 				});
 				var full = true;
 				switch (danmaku.position) {

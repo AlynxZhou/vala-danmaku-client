@@ -10,11 +10,13 @@ namespace VDMKC {
 		public int slot;
 		private int64 display_time;
 		private int64 start_display_time;
+		private bool left;
 		public signal void close();
-		public signal void left();
+		public signal void leave();
 		public Danmaku(App app, string content, string color_str, string position_str, int64 offset) {
 			this.app = app;
 			this.content = content;
+			this.left = false;
 			switch (color_str) {
 			case "red":
 				this.color = Color.RED;
@@ -119,8 +121,10 @@ namespace VDMKC {
 				this.set_context_rgba(context, this.color);
 				context.move_to(x, y);
 				Pango.cairo_show_layout(context, layout);
-				if (x + text_extents.width < canvas_width)
-					this.left();
+				if (!left && x + text_extents.width < canvas_width) {
+					this.left = true;
+					this.leave();
+				}
 				if (frame_time - this.start_display_time > this.display_time || x + text_extents.width < 0)
 					this.close();
 			} else {

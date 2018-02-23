@@ -25,6 +25,9 @@ namespace VDMKC {
 		}
 		public void start_poll() {
 			this.poll = true;
+			this.poll_thread();
+		}
+		public void poll_thread() {
 			new Thread<int>("polling", () => {
 				while (this.poll) {
 					Soup.Message message;
@@ -51,6 +54,7 @@ namespace VDMKC {
 					var root_node = parser.get_root();
 					if (root_node == null) {
 						this.app.status.set_label(_("Warning: Invalid JSON Node, continue."));
+						Thread.usleep(1000 * 1000);
 						continue;
 					}
 					var danmakus = root_node.get_object().get_array_member("result");
@@ -62,11 +66,15 @@ namespace VDMKC {
 						var color = danmaku.get_string_member("color");
 						var offset = danmaku.get_int_member("offset");
 						this.app.status.set_label(_("Danmaku: %s, %s, %s").printf(position, color, content));
-						this.app.alloc_danmaku(new Danmaku(this.app, content, color, position, offset));
+#if __DEBUG__
+						stdout.printf("Poller: Received: Danmaku: %s, %s, %s\n", position, color, content);
+#endif
+						for (var j = 0; j < this.app.canvases.size; ++j)
+							this.app.canvases.@get(j).alloc_danmaku(new Danmaku(this.app, content, color, position, offset));
 						if (offset >= this.poll_offset)
 							this.poll_offset = offset + 1;
 					}
-					Thread.usleep(500 * 1000);
+					Thread.usleep(1000 * 1000);
 				}
 				Thread.exit(0);
 				return 0;

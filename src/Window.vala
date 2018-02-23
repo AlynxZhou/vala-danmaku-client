@@ -51,7 +51,6 @@ namespace VDMKC {
 					for (var i = 0; i < this.app.canvases.size; ++i)
 						this.app.canvases.@get(i).close();
 					this.app.canvases.clear();
-					this.app.danmakus.clear();
 					this.app.poller.stop_poll();
 					this.app.poller = null;
 					this.server_entry.set_editable(true);

@@ -25,20 +25,20 @@ win32: ${MSGOBJ} ${SOURCES}
 debug: ${MSGOBJ} ${SOURCES}
 	mkdir -p bin/linux/
 	cp -R locale/ bin/linux/
-	valac -g --Xcc=-DGETTEXT_PACKAGE=\"vala-danmaku-client\" --thread ${PKGS} -o bin/linux/vala-danmaku-client_debug ${SOURCES}
+	valac -g -D __DEBUG__ --Xcc=-DGETTEXT_PACKAGE=\"vala-danmaku-client\" --thread ${PKGS} -o bin/linux/vala-danmaku-client_debug ${SOURCES}
 
 .PHONY: win32_debug
 win32_debug: ${MSGOBJ} ${SOURCES}
 	mkdir -p bin/win32/
 	cp -R locale/ bin/win32/
 	cp /mingw32/bin/${WIN32DLLS} bin/win32/
-	valac -g --Xcc=-DGETTEXT_PACKAGE=\"vala-danmaku-client\" --thread ${PKGS} -o bin/win32/vala-danmaku-client_debug ${SOURCES}
+	valac -g -D __DEBUG__ --Xcc=-DGETTEXT_PACKAGE=\"vala-danmaku-client\" --thread ${PKGS} -o bin/win32/vala-danmaku-client_debug ${SOURCES}
 
 .PHONY: macos_debug
 macos_debug: ${MSGOBJ} ${SOURCES}
 	mkdir -p bin/macos/
 	cp -R locale/ bin/macos/
-	valac -g --Xcc=-O2 --Xcc=-DGETTEXT_PACKAGE=\"vala-danmaku-client\" --thread ${PKGS} -o bin/macos/vala-danmaku-client_debug ${SOURCES}
+	valac -g -D __DEBUG__ --Xcc=-DGETTEXT_PACKAGE=\"vala-danmaku-client\" --thread ${PKGS} -o bin/macos/vala-danmaku-client_debug ${SOURCES}
 
 ${MSGOBJ}: locale/%/LC_MESSAGES/vala-danmaku-client.mo: msg/%.po
 	mkdir -p $(dir $@)
