@@ -170,6 +170,10 @@ namespace VDMKC {
 			int y;
 			this.get_position(out x, out y);
 			var geometry = this.get_screen().get_display().get_monitor(mon).get_geometry();
+			if (x >= geometry.width)
+				x = 1;
+			if (y >= geometry.width)
+				y = 1;
 			x += geometry.x;
 			y += geometry.y;
 			this.move(x, y);
