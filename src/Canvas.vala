@@ -13,6 +13,9 @@ namespace VDMKC {
 		public Canvas(App app, int mon) {
 			this.app = app;
 			this.mon = mon;
+#if __DEBUG__
+			stdout.printf("Canvas #%d: Created\n", this.mon);
+#endif
 			this.danmakus = new Gee.ConcurrentList<Danmaku>();
 			this.set_title("VDMKC.Canvas");
 			this.set_icon_name("preferences-desktop-screensaver");
@@ -150,6 +153,15 @@ namespace VDMKC {
 					}
 					break;
 				}
+			});
+			this.destroy.connect(() => {
+				this.app.canvases.remove(this);
+				this.danmakus.clear();
+#if __DEBUG__
+				stdout.printf("Canvas #%d: Closed\n", this.mon);
+#endif
+				if (app.canvases.size == 0)
+					this.app.poll_switch.set_active(false);
 			});
 		}
 		public void set_transparent_visual() {
